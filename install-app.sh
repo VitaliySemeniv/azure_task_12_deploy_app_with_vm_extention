@@ -2,25 +2,25 @@
 set -euxo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
-# 1) Оновлення системи та встановлення необхідних пакетів
+# 1) Пакети
 apt-get update -yq
 apt-get install -yq git python3-pip
 
-# 2) Створення директорії для апки
+# 2) Директория додатку
 mkdir -p /app
 
-# 3) Клонування твого репозиторію
+# 3) Клон твоєї репи у /tmp
 TMP_DIR=/tmp/todoapp
 rm -rf "$TMP_DIR"
 git clone --depth 1 https://github.com/VitaliySemeniv/azure_task_12_deploy_app_with_vm_extention.git "$TMP_DIR"
 
-# 4) Копіювання файлів апки в /app
+# 4) Копіюємо файли у /app
 cp -r "$TMP_DIR/app/"* /app
 
-# 5) Встановлення залежностей Python
-pip3 install --break-system-packages -r /app/requirements.txt
+# 5) Встановлюємо залежності (без --break-system-packages)
+python3 -m pip install -r /app/requirements.txt
 
-# 6) Копіювання systemd-сервісу і запуск
+# 6) systemd сервіс
 cp /app/todoapp.service /etc/systemd/system/todoapp.service
 systemctl daemon-reload
 systemctl enable todoapp
